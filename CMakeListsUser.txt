@@ -1,5 +1,6 @@
-if (CMAKE_BUILD_TYPE MATCHES "googletest")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
     set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations")
+    set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Wall")
 
     include_directories(
         "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/include/arduino-mock"
@@ -10,7 +11,7 @@ if (CMAKE_BUILD_TYPE MATCHES "googletest")
 
     FILE(GLOB SRC_LIST
         ${CMAKE_CURRENT_LIST_DIR}/src/button.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/src/soundAnalyzer.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/SoundAnalyzer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/*.*
     )
 
