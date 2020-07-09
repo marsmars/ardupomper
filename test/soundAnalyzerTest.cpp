@@ -12,39 +12,50 @@ using namespace testing;
 
 class SoundAnalyzerTest : public Test {
 protected:
-    ArduinoMock& arduinoMock;
-public:
-    SoundAnalyzerTest() : arduinoMock {*arduinoMockInstance()} {}
+    ArduinoMock &arduinoMock;
+    SoundAnalyzer *soundAnalyzer;
+protected:
+    virtual void SetUp() {
+        soundAnalyzer = new SoundAnalyzer();
+    }
 
-    void initializeSilence(SoundAnalyzer& soundAnalyzer, int silenceLevel) {
-        for (int i = 0; i < numberOfInitSamplesNeeded; i++) {
-            ASSERT_FALSE(soundAnalyzer.isSilenceLevelSet());
-            soundAnalyzer.processSample(i%2 ? silenceLevel - 1 : silenceLevel + 1);
+    virtual void TearDown() {
+        delete soundAnalyzer;
+    }
+
+    void initializeSilence(int silenceLevel) {
+        for (int i = 0; i < silenceInitSampleSize; i++) {
+            ASSERT_FALSE(soundAnalyzer->isSilenceLevelSet());
+            ASSERT_TRUE(soundAnalyzer->processInput(i % 2 ? silenceLevel - 1 : silenceLevel + 1) == Sound::unknown);
         }
     }
+
+    void processSample(int inputLevel) {
+        for (int i = 1; i < sampleSize; i++) {
+            ASSERT_TRUE(soundAnalyzer->processInput(i % 2 ? inputLevel - 1 : inputLevel + 1) == Sound::unknown);
+        }
+    }
+
+public:
+    SoundAnalyzerTest() : arduinoMock{*arduinoMockInstance()} {}
+
 };
 
-TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenProcessedEnoughSilenceSamplesThenSilenceLevelIsSetButNotBefore){
-    SoundAnalyzer soundAnalyzer;
-    initializeSilence(soundAnalyzer, 1);
-    ASSERT_TRUE(soundAnalyzer.isSilenceLevelSet());
+TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenProcessedEnoughSilenceSamplesThenSilenceLevelIsSetButNotBefore) {
+    initializeSilence(1);
+    ASSERT_TRUE(soundAnalyzer->isSilenceLevelSet());
 }
 
-TEST_F(SoundAnalyzerTest, GivenNonSilenceInitializedSoundAnalyzerWhenSilenceSampleProcessedThenUnknownReturned) {
-    SoundAnalyzer soundAnalyzer;
-    ASSERT_TRUE(soundAnalyzer.processSample(1) == Sound::unknown);
-}
-
-TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenSilenceSampleProcessedThenSilenceReturned) {
-    SoundAnalyzer soundAnalyzer;
-    initializeSilence(soundAnalyzer, 1);
-    ASSERT_TRUE(soundAnalyzer.processSample(1) == Sound::silence);
+TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenProperSilenceSampleIsProcessedThenSilenceReturned) {
+    initializeSilence(100);
+    processSample(100);
+    ASSERT_TRUE(soundAnalyzer->processInput(101) == Sound::silence);
 }
 
 TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenNonSilenceSampleProcessedThenUnknownReturned) {
-    SoundAnalyzer soundAnalyzer;
-    initializeSilence(soundAnalyzer, 5000);
-    ASSERT_TRUE(soundAnalyzer.processSample(2) == Sound::unknown);
+    initializeSilence(5000);
+    ASSERT_TRUE(soundAnalyzer->processInput(2) == Sound::unknown);
 }
+
 
 

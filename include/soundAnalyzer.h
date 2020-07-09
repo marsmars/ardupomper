@@ -5,25 +5,37 @@
 #ifndef ARDUPOMPER_SOUNDANALYZER_H
 #define ARDUPOMPER_SOUNDANALYZER_H
 
-const int numberOfInitSamplesNeeded = 1000;
+const int silenceInitSampleSize = 1000;
+const int sampleSize = 100;
 
-enum class Sound { silence, failure, normal, unknown};
+enum class Sound {
+    silence, failure, normal, unknown
+};
 
 class SoundAnalyzer {
 private:
-    int silenceLevelSampleCount = 0;
+    int silenceLevelInputCount = 0;
     int silenceLevel = 0;
-    bool silenceInitialized = false;
 public:
-    Sound processSample(int sample);
+    Sound processInput(int input);
 
-    bool isSilenceLevelSet();
+    bool isSilenceLevelSet() const;
 
-    void initializeSilenceLevel(int sample);
-
-    bool itsTheLastSilenceInitSample() const;
+    void initializeSilenceLevel(int input);
 
     void setSilenceLevel();
+
+    bool itsTheLastSilenceInitReading() const;
+
+    Sound getSoundFromInput(int input) const;
+
+    bool isSampleSilence(int sample) const;
+
+    int getAverage(int sum, int count) const;
+
+    Sound getSound(int inputLevel) const;
+
+    bool isSampleProcessed(int &input) const;
 };
 
 
