@@ -1,0 +1,10 @@
+//
+// Created by PGD384 on 7/8/2020.
+//
+
+#ifndef ARDUPOMPER_SOUNDANALYZERTEST_H
+#define ARDUPOMPER_SOUNDANALYZERTEST_H
+
+bool soundAnalyzerSetup();
+
+#endif //ARDUPOMPER_SOUNDANALYZERTEST_H
