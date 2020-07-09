@@ -2,9 +2,9 @@ if (CMAKE_BUILD_TYPE MATCHES "googletest")
     set(CMAKE_CXX_FLAGS "-Wno-deprecated-declarations")
 
     include_directories(
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/include/arduino-mock"
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/build/lib/gmock/gmock/src/gmock/gtest/include"
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/build/lib/gmock/gmock/src/gmock/include"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/include/arduino-mock"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/build/lib/gmock/gmock/src/gmock/gtest/include"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/build/lib/gmock/gmock/src/gmock/include"
         "${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/uno/Stepper_ID874/src"
     )
 
@@ -16,9 +16,9 @@ if (CMAKE_BUILD_TYPE MATCHES "googletest")
 
 
     link_directories(
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/build/dist/lib"
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/build/lib/gmock/gmock/src/gmock-build"
-        "${CMAKE_CURRENT_LIST_DIR}/test/lib/arduino-mock/build/lib/gmock/gmock/src/gmock-build/gtest"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/build/dist/lib"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/build/lib/gmock/gmock/src/gmock-build"
+        "$ENV{HOMEDRIVE}$ENV{HOMEPATH}/Repo/arduino-mock/build/lib/gmock/gmock/src/gmock-build/gtest"
     )
 
     add_executable(ardupomper.exe ${SRC_LIST})
