@@ -3,32 +3,41 @@
 //
 
 #include <math.h>
+#include <memory>
 #include "SoundLevel.h"
 
-bool SoundLevel::isSampleProcessed(int &input) {
-    inputCount++;
-    inputLevel += input;
-    if (isLastInputInSample(inputCount)) {
-        input = getAverage(inputLevel, inputCount);
-        inputCount = 0;
-        inputLevel = 0;
-        return true;
-    }
-    return false;
+using std::unique_ptr;
+
+Sound SoundLevel::processInput(int input) {
+    resetSampleIfAlreadyProcessed();
+    int sampleLevel = sample->processInput(input);
+    if (!isLevelSet())
+        return setLevelIfSampleProcessed(sampleLevel);
+    return processAtLevel(input, sampleLevel);
 }
 
-bool SoundLevel::isLastInputInSample(int inputCount) const { return inputCount == sampleSize; }
+Sound SoundLevel::processAtLevel(int input, int sampleLevel) const {
+    if (sample->isProcessed() && isSampleAtLevel(sampleLevel))
+        return sound;
+    else
+        return processNextLevel(input);
+}
 
-int SoundLevel::getAverage(int sum, int count) const { return nearbyint((double)sum / (double)count); }
+Sound SoundLevel::setLevelIfSampleProcessed(int sampleLevel) {
+    if (sample->isProcessed())
+        setLevel(sampleLevel);
+    return Sound::unknown;
+}
 
-bool SoundLevel::processInput(int input) {
-    bool sampleAtLevel = false;
-    if (isSampleProcessed(input))
-        if(isLevelSet())
-            sampleAtLevel = isSampleAtLevel(input);
-        else
-            setLevel(input);
-    return sampleAtLevel;
+Sound SoundLevel::processNextLevel(int input) const {
+    if (nextLevel)
+        return nextLevel->processInput(input);
+    return Sound::unknown;
+}
+
+void SoundLevel::resetSampleIfAlreadyProcessed() {
+    if (sample->isProcessed())
+        sample.reset(new SoundSample());
 }
 
 bool SoundLevel::isSampleAtLevel(int sample) const { return sample == level; }
@@ -37,10 +46,14 @@ bool SoundLevel::isLevelSet() const {
     return level != levelNotSet;
 }
 
-int SoundLevel::getLevel() const {
-    return level;
+int SoundLevel::setLevel(int level) {
+    return SoundLevel::level = level;
 }
 
-void SoundLevel::setLevel(int level) {
-    SoundLevel::level = level;
+bool SoundLevel::isSampleProcessed() const {
+    return sample->isProcessed();
+}
+
+void SoundLevel::setNextLevel(shared_ptr<SoundLevel> nextLevel) {
+    SoundLevel::nextLevel = nextLevel;
 }

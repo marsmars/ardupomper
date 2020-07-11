@@ -11,6 +11,7 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
 
     FILE(GLOB SRC_LIST
         ${CMAKE_CURRENT_LIST_DIR}/src/button.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/src/SoundSample.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/SoundLevel.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/SoundAnalyzer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/test/*.*

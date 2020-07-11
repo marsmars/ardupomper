@@ -9,18 +9,14 @@
 #include <memory>
 #include "SoundLevel.h"
 
-using namespace std;
-
-enum class Sound {
-    silence, failure, normal, unknown
-};
+using std::shared_ptr;
 
 class SoundAnalyzer {
 private:
-    unique_ptr<SoundLevel>  silence;
-    unique_ptr<SoundLevel>  failure;
+    shared_ptr<SoundLevel>  silence;
+    shared_ptr<SoundLevel>  failure;
 public:
-    SoundAnalyzer(): silence{new SoundLevel()}, failure{new SoundLevel()}{};
+    SoundAnalyzer();
 
     Sound processInput(int input);
 
