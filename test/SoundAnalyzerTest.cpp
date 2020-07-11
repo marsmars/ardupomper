@@ -14,6 +14,7 @@ using std::make_tuple;
 
 const int silenceLevel = 200;
 const int failureLevel = 300;
+const int normalLevel = 400;
 
 class SoundAnalyzerTest : public TestWithParam<tuple<int, Sound>> {
 protected:
@@ -74,6 +75,7 @@ TEST_P(SoundAnalyzerTest, GivenInitializedSoundAnalyzerWhenSamplesAreProcessedTh
     Sound sound = std::get<1>(GetParam());
     initializeSoundLevel(&soundAnalyzer, silenceLevel);
     initializeSoundLevel(&soundAnalyzer, failureLevel);
+    initializeSoundLevel(&soundAnalyzer, normalLevel);
     ASSERT_EQ(sound, processSample(&soundAnalyzer, sample));
 }
 
@@ -83,4 +85,7 @@ INSTANTIATE_TEST_CASE_P(
         Values(
                 make_tuple(silenceLevel, Sound::silence),
                 make_tuple(failureLevel, Sound::failure),
-                make_tuple(400, Sound::unknown)));
+                make_tuple(normalLevel, Sound::normal),
+                make_tuple(500, Sound::unknown),
+                make_tuple(5000, Sound::unknown),
+                make_tuple(50000, Sound::unknown)));

@@ -15,6 +15,7 @@ class SoundAnalyzer {
 private:
     shared_ptr<SoundLevel>  silence;
     shared_ptr<SoundLevel>  failure;
+    shared_ptr<SoundLevel>  normal;
 public:
     SoundAnalyzer();
 
