@@ -40,20 +40,15 @@ void SoundLevel::resetSampleIfAlreadyProcessed() {
         sample.reset(new SoundSample());
 }
 
-bool SoundLevel::isSampleAtLevel(int sample) const { return sample == level; }
-
-bool SoundLevel::isLevelSet() const {
-    return level != levelNotSet;
+bool SoundLevel::isSampleAtLevel(int sample) const {
+    double precision = (double) level / precisionPercent;
+    return fabs(double(sample - level)) <= precision;
 }
 
-int SoundLevel::setLevel(int level) {
-    return SoundLevel::level = level;
-}
+bool SoundLevel::isLevelSet() const { return level != levelNotSet; }
 
-bool SoundLevel::isSampleProcessed() const {
-    return sample->isProcessed();
-}
+int SoundLevel::setLevel(int level) { return SoundLevel::level = level; }
 
-void SoundLevel::setNextLevel(shared_ptr<SoundLevel> nextLevel) {
-    SoundLevel::nextLevel = nextLevel;
-}
+bool SoundLevel::isSampleProcessed() const { return sample->isProcessed();}
+
+void SoundLevel::setNextLevel(shared_ptr<SoundLevel> nextLevel) { SoundLevel::nextLevel = nextLevel; }

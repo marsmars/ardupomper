@@ -28,10 +28,16 @@ protected:
         delete soundAnalyzer;
     }
 
-    void initializeSoundLevel(SoundAnalyzer *soundAnalyzer, int silenceLevel) {
+    void initializeSoundLevel(SoundAnalyzer *soundAnalyzer, int soundLevel) {
         for (int i = 0; i < sampleSize; i++) {
-            soundAnalyzer->processInput(i % 2 ? silenceLevel - 1 : silenceLevel + 1);
+            soundAnalyzer->processInput(i % 2 ? soundLevel - 1 : soundLevel + 1);
         }
+    }
+
+    void initializeAnalyzer(SoundAnalyzer *soundAnalyzer) {
+        initializeSoundLevel(soundAnalyzer, silenceLevel);
+        initializeSoundLevel(soundAnalyzer, failureLevel);
+        initializeSoundLevel(soundAnalyzer, normalLevel);
     }
 
     Sound processSample(SoundAnalyzer *soundAnalyzer, int inputLevel) {
@@ -50,7 +56,8 @@ TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenSilenceSampleIsProcessedThenSile
     ASSERT_TRUE(soundAnalyzer->isSilenceLevelSet());
 }
 
-TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenFailureSampleIsProcessedThenFailureLevelIsSetButNotBefore) {
+TEST_F(SoundAnalyzerTest,
+       GivenSilenceInitializedSoundAnalyzerWhenFailureSampleIsProcessedThenFailureLevelIsSetButNotBefore) {
     initializeSoundLevel(soundAnalyzer, silenceLevel);
     for (int i = 0; i < sampleSize; i++) {
         ASSERT_FALSE(soundAnalyzer->isFailureLevelSet());
@@ -59,7 +66,8 @@ TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenFailureSampleI
     ASSERT_TRUE(soundAnalyzer->isFailureLevelSet());
 }
 
-TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenProperSilenceSampleIsProcessedThenSilenceReturnedButNotBefore) {
+TEST_F(SoundAnalyzerTest,
+       GivenSilenceInitializedSoundAnalyzerWhenProperSilenceSampleIsProcessedThenSilenceReturnedButNotBefore) {
     int inputLevel = 100;
     initializeSoundLevel(soundAnalyzer, inputLevel);
     for (int i = 1; i < sampleSize; i++) {
@@ -69,16 +77,6 @@ TEST_F(SoundAnalyzerTest, GivenSilenceInitializedSoundAnalyzerWhenProperSilenceS
     ASSERT_TRUE(soundAnalyzer->processInput(101) == Sound::silence);
 }
 
-TEST_P(SoundAnalyzerTest, GivenInitializedSoundAnalyzerWhenSamplesAreProcessedThenCorrectSoundIsReturned) {
-    SoundAnalyzer soundAnalyzer = SoundAnalyzer();
-    int sample = std::get<0>(GetParam());
-    Sound sound = std::get<1>(GetParam());
-    initializeSoundLevel(&soundAnalyzer, silenceLevel);
-    initializeSoundLevel(&soundAnalyzer, failureLevel);
-    initializeSoundLevel(&soundAnalyzer, normalLevel);
-    ASSERT_EQ(sound, processSample(&soundAnalyzer, sample));
-}
-
 INSTANTIATE_TEST_CASE_P(
         samplesProcessedTest,
         SoundAnalyzerTest,
@@ -86,6 +84,20 @@ INSTANTIATE_TEST_CASE_P(
                 make_tuple(silenceLevel, Sound::silence),
                 make_tuple(failureLevel, Sound::failure),
                 make_tuple(normalLevel, Sound::normal),
+                make_tuple(silenceLevel+20, Sound::silence),
+                make_tuple(failureLevel-30, Sound::failure),
+                make_tuple(normalLevel+40, Sound::normal),
+                make_tuple(silenceLevel-21, Sound::unknown),
+                make_tuple(failureLevel+31, Sound::unknown),
+                make_tuple(normalLevel-41, Sound::unknown),
                 make_tuple(500, Sound::unknown),
                 make_tuple(5000, Sound::unknown),
                 make_tuple(50000, Sound::unknown)));
+
+TEST_P(SoundAnalyzerTest, GivenInitializedSoundAnalyzerWhenSamplesAreProcessedThenCorrectSoundIsReturned) {
+    SoundAnalyzer soundAnalyzer = SoundAnalyzer();
+    initializeAnalyzer(&soundAnalyzer);
+    int sample = std::get<0>(GetParam());
+    Sound sound = std::get<1>(GetParam());
+    ASSERT_EQ(sound, processSample(&soundAnalyzer, sample));
+}
