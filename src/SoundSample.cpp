@@ -11,12 +11,13 @@ bool SoundSample::isProcessed() { return isLastInputInSample(); }
 
 bool SoundSample::isLastInputInSample() const { return inputCount == sampleSize; }
 
-int SoundSample::getAverage(int sum, int count) const { return round((double)sum / (double)count); }
+int SoundSample::getAverage(unsigned long sum, int count) const {
+    return round((double)sum / (double)count);
+}
 
 int SoundSample::processInput(int input) {
     inputCount++;
     inputLevel += input;
-    Logger::log(input);
     if (isLastInputInSample())
         return getAverage(inputLevel, inputCount);
     return notProcessed;

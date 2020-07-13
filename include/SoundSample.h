@@ -9,7 +9,7 @@ const int notProcessed = -1;
 
 class SoundSample {
     int inputCount = 0;
-    long inputLevel = 0;
+    unsigned long inputLevel = 0;
 public:
     int processInput(int input);
 
@@ -17,7 +17,7 @@ public:
 
     bool isLastInputInSample() const;
 
-    int getAverage(int sum, int count) const;
+    int getAverage(unsigned long sum, int count) const;
 };
 
 #endif //ARDUPOMPER_SOUNDSAMPLE_H

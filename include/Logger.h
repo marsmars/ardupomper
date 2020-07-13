@@ -10,7 +10,13 @@ class Logger {
 public:
     static void log(int value);
 
-    static void log(char *value);
+    static void log(long value);
+
+    static void log(unsigned long value);
+
+    static void log(double value);
+
+    static void log(const char *value);
 };
 
 
