@@ -9,7 +9,7 @@ const int notProcessed = -1;
 
 class SoundSample {
     int inputCount = 0;
-    int inputLevel = 0;
+    long inputLevel = 0;
 public:
     int processInput(int input);
 

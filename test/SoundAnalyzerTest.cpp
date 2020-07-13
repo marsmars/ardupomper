@@ -2,8 +2,7 @@
 // Created by PGD384 on 7/8/2020.
 //
 
-#include <gtest/gtest.h>
-#include <tuple>
+#include "SoundAnalyzerTest.h"
 #include "SoundAnalyzer.h"
 
 using testing::Test;
@@ -12,41 +11,45 @@ using testing::Values;
 using std::tuple;
 using std::make_tuple;
 
-const int silenceLevel = 200;
-const int failureLevel = 300;
-const int normalLevel = 400;
+void initializeSoundLevel(SoundAnalyzer *soundAnalyzer, int soundLevel) {
+    for (int i = 0; i < sampleSize; i++) {
+        soundAnalyzer->processInput(i % 2 ? soundLevel - 1 : soundLevel + 1);
+    }
+}
+
+void initializeAnalyzer(SoundAnalyzer *soundAnalyzer) {
+    initializeSoundLevel(soundAnalyzer, silenceLevel);
+    initializeSoundLevel(soundAnalyzer, failureLevel);
+    initializeSoundLevel(soundAnalyzer, normalLevel);
+}
+
+Sound processSample(SoundAnalyzer *soundAnalyzer, int inputLevel) {
+    for (int i = 1; i < sampleSize; i++) {
+        soundAnalyzer->processInput(i % 2 ? inputLevel - 1 : inputLevel + 1);
+    }
+    return soundAnalyzer->processInput(inputLevel);
+}
 
 class SoundAnalyzerTest : public TestWithParam<tuple<int, Sound>> {
 protected:
     SoundAnalyzer *soundAnalyzer;
 
-    virtual void SetUp() {
-        soundAnalyzer = new SoundAnalyzer();
-    }
+    virtual void SetUp();
 
-    virtual void TearDown() {
-        delete soundAnalyzer;
-    }
-
-    void initializeSoundLevel(SoundAnalyzer *soundAnalyzer, int soundLevel) {
-        for (int i = 0; i < sampleSize; i++) {
-            soundAnalyzer->processInput(i % 2 ? soundLevel - 1 : soundLevel + 1);
-        }
-    }
-
-    void initializeAnalyzer(SoundAnalyzer *soundAnalyzer) {
-        initializeSoundLevel(soundAnalyzer, silenceLevel);
-        initializeSoundLevel(soundAnalyzer, failureLevel);
-        initializeSoundLevel(soundAnalyzer, normalLevel);
-    }
-
-    Sound processSample(SoundAnalyzer *soundAnalyzer, int inputLevel) {
-        for (int i = 1; i < sampleSize; i++) {
-            soundAnalyzer->processInput(i % 2 ? inputLevel - 1 : inputLevel + 1);
-        }
-        return soundAnalyzer->processInput(inputLevel);
-    }
+    virtual void TearDown();
 };
+
+void SoundAnalyzerTest::SetUp() {
+    Test::SetUp();
+    soundAnalyzer = new SoundAnalyzer();
+}
+
+void SoundAnalyzerTest::TearDown() {
+    Test::TearDown();
+    delete soundAnalyzer;
+}
+
+
 
 TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenSilenceSampleIsProcessedThenSilenceLevelIsSetButNotBefore) {
     for (int i = 0; i < sampleSize; i++) {
@@ -54,6 +57,7 @@ TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenSilenceSampleIsProcessedThenSile
         ASSERT_TRUE(soundAnalyzer->processInput(i % 2 ? silenceLevel - 1 : silenceLevel + 1) == Sound::unknown);
     }
     ASSERT_TRUE(soundAnalyzer->isSilenceLevelSet());
+    ASSERT_EQ(silenceLevel, soundAnalyzer->getSilenceLevel());
 }
 
 TEST_F(SoundAnalyzerTest,
@@ -64,6 +68,19 @@ TEST_F(SoundAnalyzerTest,
         ASSERT_TRUE(soundAnalyzer->processInput(i % 2 ? failureLevel - 1 : failureLevel + 1) == Sound::unknown);
     }
     ASSERT_TRUE(soundAnalyzer->isFailureLevelSet());
+    ASSERT_EQ(failureLevel, soundAnalyzer->getFailureLevel());
+}
+
+TEST_F(SoundAnalyzerTest,
+       GivenSilenceAndFailureInitializedSoundAnalyzerWhenNormalSampleIsProcessedThenNormalLevelIsSetButNotBefore) {
+    initializeSoundLevel(soundAnalyzer, silenceLevel);
+    initializeSoundLevel(soundAnalyzer, failureLevel);
+    for (int i = 0; i < sampleSize; i++) {
+        ASSERT_FALSE(soundAnalyzer->isNormalLevelSet());
+        ASSERT_TRUE(soundAnalyzer->processInput(i % 2 ? normalLevel - 1 : normalLevel + 1) == Sound::unknown);
+    }
+    ASSERT_TRUE(soundAnalyzer->isNormalLevelSet());
+    ASSERT_EQ(normalLevel, soundAnalyzer->getNormalLevel());
 }
 
 TEST_F(SoundAnalyzerTest,
@@ -101,3 +118,4 @@ TEST_P(SoundAnalyzerTest, GivenInitializedSoundAnalyzerWhenSamplesAreProcessedTh
     Sound sound = std::get<1>(GetParam());
     ASSERT_EQ(sound, processSample(&soundAnalyzer, sample));
 }
+

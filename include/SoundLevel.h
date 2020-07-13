@@ -5,32 +5,32 @@
 #ifndef ARDUPOMPER_SOUNDLEVEL_H
 #define ARDUPOMPER_SOUNDLEVEL_H
 
-#include <memory>
 #include "SoundSample.h"
-
-using std::unique_ptr;
-using std::shared_ptr;
 
 enum class Sound {
     silence, failure, normal, unknown
 };
 
 const int levelNotSet = -1;
-const int sampleSize = 500;
+const int sampleSize = 10000;
 const double precisionPercent = 10;
 
 class SoundLevel {
 private:
     int level = levelNotSet;
-    unique_ptr<SoundSample> sample;
-    shared_ptr<SoundLevel> nextLevel;
+    SoundSample *sample;
+    SoundLevel *nextLevel = 0;
     const Sound sound;
 public:
-    explicit SoundLevel(Sound sound) : sound{sound}, sample{new SoundSample()} {}
+    int getLevel() const;
+
+    explicit SoundLevel(Sound sound) : sample{new SoundSample()}, nextLevel{0}, sound{sound} {}
+
+    virtual ~SoundLevel() { delete sample; }
 
     int setLevel(int level);
 
-    void setNextLevel(shared_ptr<SoundLevel> nextLevel);
+    void setNextLevel(SoundLevel *nextLevel);
 
     Sound processInput(int input);
 

@@ -6,23 +6,31 @@
 #ifndef ARDUPOMPER_SOUNDANALYZER_H
 #define ARDUPOMPER_SOUNDANALYZER_H
 
-#include <memory>
 #include "SoundLevel.h"
-
-using std::shared_ptr;
 
 class SoundAnalyzer {
 private:
-    shared_ptr<SoundLevel>  silence;
-    shared_ptr<SoundLevel>  failure;
-    shared_ptr<SoundLevel>  normal;
+    SoundLevel *silence;
+    SoundLevel *failure;
+    SoundLevel *normal;
 public:
     SoundAnalyzer();
+
+    virtual ~SoundAnalyzer();
 
     Sound processInput(int input);
 
     bool isSilenceLevelSet() const;
+
     bool isFailureLevelSet() const;
+
+    bool isNormalLevelSet() const;
+
+    int getSilenceLevel() const;
+
+    int getFailureLevel() const;
+
+    int getNormalLevel() const;
 };
 
 

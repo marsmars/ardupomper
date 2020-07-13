@@ -12,6 +12,12 @@ SoundAnalyzer::SoundAnalyzer() : silence{new SoundLevel(Sound::silence)},
     failure->setNextLevel(normal);
 }
 
+SoundAnalyzer::~SoundAnalyzer() {
+    delete normal;
+    delete failure;
+    delete silence;
+}
+
 Sound SoundAnalyzer::processInput(int input) {
     return silence->processInput(input);
 }
@@ -19,5 +25,20 @@ Sound SoundAnalyzer::processInput(int input) {
 bool SoundAnalyzer::isSilenceLevelSet() const { return silence->isLevelSet(); }
 
 bool SoundAnalyzer::isFailureLevelSet() const { return failure->isLevelSet(); }
+
+bool SoundAnalyzer::isNormalLevelSet() const { return normal->isLevelSet(); }
+
+int SoundAnalyzer::getSilenceLevel() const {
+    return silence->getLevel();
+}
+
+int SoundAnalyzer::getFailureLevel() const {
+    return failure->getLevel();
+}
+
+int SoundAnalyzer::getNormalLevel() const {
+    return normal->getLevel();
+}
+
 
 

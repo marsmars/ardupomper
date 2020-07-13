@@ -3,10 +3,7 @@
 //
 
 #include <math.h>
-#include <memory>
 #include "SoundLevel.h"
-
-using std::unique_ptr;
 
 Sound SoundLevel::processInput(int input) {
     resetSampleIfAlreadyProcessed();
@@ -36,12 +33,14 @@ Sound SoundLevel::processNextLevel(int input) const {
 }
 
 void SoundLevel::resetSampleIfAlreadyProcessed() {
-    if (sample->isProcessed())
-        sample.reset(new SoundSample());
+    if (sample->isProcessed()) {
+        delete sample;
+        sample = new SoundSample();
+    }
 }
 
 bool SoundLevel::isSampleAtLevel(int sample) const {
-    double precision = (double) level / precisionPercent;
+    double precision = (double) level * ((double)precisionPercent/(double)100);
     return fabs(double(sample - level)) <= precision;
 }
 
@@ -49,6 +48,9 @@ bool SoundLevel::isLevelSet() const { return level != levelNotSet; }
 
 int SoundLevel::setLevel(int level) { return SoundLevel::level = level; }
 
-bool SoundLevel::isSampleProcessed() const { return sample->isProcessed();}
+bool SoundLevel::isSampleProcessed() const { return sample->isProcessed(); }
 
-void SoundLevel::setNextLevel(shared_ptr<SoundLevel> nextLevel) { SoundLevel::nextLevel = nextLevel; }
+void SoundLevel::setNextLevel(SoundLevel *nextLevel) { SoundLevel::nextLevel = nextLevel; }
+
+int SoundLevel::getLevel() const { return level; }
+
