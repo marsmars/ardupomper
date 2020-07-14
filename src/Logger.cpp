@@ -14,7 +14,7 @@ void Logger::log(int value) {
 #ifdef ARDUINO_AVR_UNO
     Serial.println(value);
 #else
-    cout << value;
+    cout << value << "\n";
 #endif
 }
 
@@ -22,7 +22,7 @@ void Logger::log(const char *value) {
 #ifdef ARDUINO_AVR_UNO
     Serial.println(value);
 #else
-    cout << value;
+    cout << value << "\n";
 #endif
 }
 
@@ -30,7 +30,7 @@ void Logger::log(long value) {
 #ifdef ARDUINO_AVR_UNO
     Serial.println(value);
 #else
-    cout << value;
+    cout << value << "\n";
 #endif
 }
 
@@ -38,7 +38,7 @@ void Logger::log(unsigned long value) {
 #ifdef ARDUINO_AVR_UNO
     Serial.println(value);
 #else
-    cout << value;
+    cout << value << "\n";
 #endif
 }
 
@@ -46,6 +46,6 @@ void Logger::log(double value) {
 #ifdef ARDUINO_AVR_UNO
     Serial.println(value);
 #else
-    cout << value;
+    cout << value << "\n";
 #endif
 }

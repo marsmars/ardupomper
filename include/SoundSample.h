@@ -13,11 +13,13 @@ class SoundSample {
 public:
     int processInput(int input);
 
-    bool isProcessed();
+    bool isComplete();
 
     bool isLastInputInSample() const;
 
     int getAverage(unsigned long sum, int count) const;
+
+    int getLevel();
 };
 
 #endif //ARDUPOMPER_SOUNDSAMPLE_H

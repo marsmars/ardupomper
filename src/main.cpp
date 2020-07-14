@@ -40,6 +40,6 @@ void loop() {
             Logger::log(analyzer->getNormalLevel());
             normalPrinted = true;
         }
-//        Serial.println(analogRead(A0), DEC);
+//        Serial.println(analogRead(A0));
     }
 }

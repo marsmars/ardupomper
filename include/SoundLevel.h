@@ -34,19 +34,15 @@ public:
 
     Sound processInput(int input);
 
-    bool isSampleProcessed() const;
+    Sound processSample(SoundSample *sample);
 
     bool isLevelSet() const;
 
-    bool isSampleAtLevel(int sample) const;
+    bool isSampleAtLevel(SoundSample *sample) const;
 
     void resetSampleIfAlreadyProcessed();
 
-    Sound processNextLevel(int input) const;
-
-    Sound setLevelIfSampleProcessed(int sampleLevel);
-
-    Sound processAtLevel(int input, int sampleLevel) const;
+    Sound processSampleAtNextLevel(SoundSample *sample);
 };
 
 

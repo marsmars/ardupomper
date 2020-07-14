@@ -49,8 +49,6 @@ void SoundAnalyzerTest::TearDown() {
     delete soundAnalyzer;
 }
 
-
-
 TEST_F(SoundAnalyzerTest, GivenSoundAnalyzerWhenSilenceSampleIsProcessedThenSilenceLevelIsSetButNotBefore) {
     for (int i = 0; i < sampleSize; i++) {
         ASSERT_FALSE(soundAnalyzer->isSilenceLevelSet());
@@ -82,6 +80,23 @@ TEST_F(SoundAnalyzerTest,
     ASSERT_TRUE(soundAnalyzer->isNormalLevelSet());
     ASSERT_EQ(normalLevel, soundAnalyzer->getNormalLevel());
 }
+
+TEST_F(SoundAnalyzerTest,
+       GivenSilenceInitializedSoundAnalyzerWhenSilenceInitilizedAgainThenNoOtherLevelIsInitialized) {
+    initializeSoundLevel(soundAnalyzer, silenceLevel);
+    initializeSoundLevel(soundAnalyzer, silenceLevel);
+    ASSERT_FALSE(soundAnalyzer->isFailureLevelSet());
+    ASSERT_FALSE(soundAnalyzer->isNormalLevelSet());
+}
+
+TEST_F(SoundAnalyzerTest, CloseLevels) {
+    initializeSoundLevel(soundAnalyzer, 141);
+    initializeSoundLevel(soundAnalyzer, 134);
+    initializeSoundLevel(soundAnalyzer, 129);
+    ASSERT_FALSE(soundAnalyzer->isFailureLevelSet());
+    ASSERT_FALSE(soundAnalyzer->isNormalLevelSet());
+}
+
 
 TEST_F(SoundAnalyzerTest,
        GivenSilenceInitializedSoundAnalyzerWhenProperSilenceSampleIsProcessedThenSilenceReturnedButNotBefore) {

@@ -7,7 +7,7 @@
 #include "SoundLevel.h"
 #include "Logger.h"
 
-bool SoundSample::isProcessed() { return isLastInputInSample(); }
+bool SoundSample::isComplete() { return isLastInputInSample(); }
 
 bool SoundSample::isLastInputInSample() const { return inputCount == sampleSize; }
 
@@ -19,6 +19,10 @@ int SoundSample::processInput(int input) {
     inputCount++;
     inputLevel += input;
     if (isLastInputInSample())
-        return getAverage(inputLevel, inputCount);
+        return inputLevel = getAverage(inputLevel, inputCount);
     return notProcessed;
+}
+
+int SoundSample::getLevel() {
+    return inputLevel;
 }
