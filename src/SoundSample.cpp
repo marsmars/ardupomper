@@ -11,18 +11,31 @@ bool SoundSample::isComplete() { return isLastInputInSample(); }
 
 bool SoundSample::isLastInputInSample() const { return inputCount == sampleSize; }
 
-int SoundSample::getAverage(unsigned long sum, int count) const {
-    return round((double)sum / (double)count);
+double SoundSample::getAverage(unsigned long sum, int count) const {
+//    Logger::log((double)sum / (double)count);
+    return (double)sum / (double)count;
 }
 
 int SoundSample::processInput(int input) {
     inputCount++;
-    inputLevel += input;
-    if (isLastInputInSample())
-        return inputLevel = getAverage(inputLevel, inputCount);
+    if (inputCount < sampleSize /2)
+        inputLevel += input;
+    else if (inputCount == sampleSize /2){
+        inputLevel += input;
+//        Logger::log("Base level:");
+        baseLevel = getAverage(inputLevel, inputCount);
+        inputLevel = 0;
+    }
+    else
+        inputLevel += fabs(input-baseLevel);
+    if (isLastInputInSample()) {
+//        Logger::log("Sample level:");
+        sampleLevel = getAverage(inputLevel, inputCount / 4);
+        return inputLevel;
+    }
     return notProcessed;
 }
 
-int SoundSample::getLevel() {
-    return inputLevel;
+double SoundSample::getLevel() {
+    return sampleLevel;
 }

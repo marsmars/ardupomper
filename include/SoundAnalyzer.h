@@ -26,11 +26,13 @@ public:
 
     bool isNormalLevelSet() const;
 
-    int getSilenceLevel() const;
+    double getSilenceLevel() const;
 
-    int getFailureLevel() const;
+    double getFailureLevel() const;
 
-    int getNormalLevel() const;
+    double getNormalLevel() const;
+
+    bool isInitialized();
 };
 
 

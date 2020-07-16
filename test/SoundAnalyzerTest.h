@@ -15,9 +15,12 @@
 using testing::TestWithParam;
 using std::tuple;
 
+const int baseLevel = 1000;
 const int silenceLevel = 200;
 const int failureLevel = 300;
 const int normalLevel = 400;
+
+int getVariableInput(int i, int level);
 
 void initializeSoundLevel(SoundAnalyzer *soundAnalyzer, int soundLevel);
 

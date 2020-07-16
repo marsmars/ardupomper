@@ -14,5 +14,5 @@ int getButtonState() {
 }
 
 bool isButtonPressed(){
-    return getButtonState() == HIGH;
+    return getButtonState() == LOW;
 }

@@ -11,26 +11,25 @@ enum class Sound {
     silence, failure, normal, unknown
 };
 
-const int levelNotSet = -1;
-const int sampleSize = 10000;
+const double levelNotSet = -1;
 const double precisionPercent = 10;
 
 class SoundLevel {
 private:
-    int level = levelNotSet;
+    double level = levelNotSet;
     SoundSample *sample;
     SoundLevel *nextLevel = 0;
     const Sound sound;
 public:
-    int getLevel() const;
+    double getLevel() const;
 
     explicit SoundLevel(Sound sound) : sample{new SoundSample()}, nextLevel{0}, sound{sound} {}
 
     virtual ~SoundLevel() { delete sample; }
 
-    int setLevel(int level);
+    double setLevel(double level);
 
-    void setNextLevel(SoundLevel *nextLevel);
+    void setNextSoundLevel(SoundLevel *nextLevel);
 
     Sound processInput(int input);
 
