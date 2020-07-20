@@ -17,6 +17,9 @@ protected:
     Leds *leds;
 
     virtual void SetUp() {
+        EXPECT_CALL(*arduinoMock, pinMode(silenceLed, OUTPUT)).Times(1);
+        EXPECT_CALL(*arduinoMock, pinMode(normalLed, OUTPUT)).Times(1);
+        EXPECT_CALL(*arduinoMock, pinMode(failureLed, OUTPUT)).Times(1);
         analyzer = new SoundAnalyzer;
         leds = new Leds(analyzer);
     }
@@ -34,13 +37,6 @@ public:
     }
 
 };
-
-TEST_F(LedsTest, CanSetupLed) {
-    EXPECT_CALL(*arduinoMock, pinMode(silenceLed, OUTPUT)).Times(1);
-    EXPECT_CALL(*arduinoMock, pinMode(normalLed, OUTPUT)).Times(1);
-    EXPECT_CALL(*arduinoMock, pinMode(failureLed, OUTPUT)).Times(1);
-    ledsSetup();
-}
 
 TEST_F(LedsTest, GivenNonSilenceInitializedSoundAnalyzerWhenLedsStatesChangedThenSilenceLedIsTurnedOff) {
     EXPECT_CALL(*arduinoMock, digitalWrite(silenceLed, LOW));

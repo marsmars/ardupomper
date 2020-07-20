@@ -40,7 +40,7 @@ double SoundAnalyzer::getNormalLevel() const {
     return normal->getLevel();
 }
 
-bool SoundAnalyzer::isInitialized() {
+bool SoundAnalyzer::isInitialized() const {
     return isSilenceLevelSet() && isFailureLevelSet() && isNormalLevelSet();
 }
 

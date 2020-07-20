@@ -18,7 +18,7 @@ Sound SoundLevel::processSample(SoundSample *sample) {
         setLevel(sample->getLevel());
         return Sound::unknown;
     }
-    if (isSampleAtLevel(sample))
+    if (sample->isAtLevel(level))
         return sound;
     return processSampleAtNextLevel(sample);
 }
@@ -29,12 +29,6 @@ void SoundLevel::resetSampleIfAlreadyProcessed() {
         delete sample;
         sample = new SoundSample();
     }
-}
-
-bool SoundLevel::isSampleAtLevel(SoundSample *sample) const {
-//    double precision = (double) level * ((double) precisionPercent / (double) 100);
-//    return fabs(double(sample->getLevel() - level)) <= precision;
-    return fabs(double(sample->getLevel() - level)) <= 0.5;
 }
 
 bool SoundLevel::isLevelSet() const { return level != levelNotSet; }

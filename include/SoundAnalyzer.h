@@ -18,21 +18,21 @@ public:
 
     virtual ~SoundAnalyzer();
 
-    Sound processInput(int input);
+    virtual Sound processInput(int input);
 
-    bool isSilenceLevelSet() const;
+    virtual bool isSilenceLevelSet() const;
 
-    bool isFailureLevelSet() const;
+    virtual bool isFailureLevelSet() const;
 
-    bool isNormalLevelSet() const;
+    virtual bool isNormalLevelSet() const;
 
-    double getSilenceLevel() const;
+    virtual double getSilenceLevel() const;
 
-    double getFailureLevel() const;
+    virtual double getFailureLevel() const;
 
-    double getNormalLevel() const;
+    virtual double getNormalLevel() const;
 
-    bool isInitialized();
+    virtual bool isInitialized() const;
 };
 
 

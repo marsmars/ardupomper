@@ -1,59 +1,35 @@
 #include <Arduino.h>
+#include "main.h"
 #include "Leds.h"
-#include "pomper.h"
-#include "button.h"
-#include "Logger.h"
+#include "Pomper.h"
+#include "Button.h"
+#include "LoopProcessor.h"
 
 SoundAnalyzer *analyzer;
 Leds *leds;
+Button *button;
+Pomper *pomper;
+LoopProcessor *loopProcessor;
 
-void setup() {
-    Serial.begin(9600);
-    buttonSetup();
-    pomperSetup();
-    ledsSetup();
+
+void mainLoop(LoopProcessor *loopProcessor, Button *button, Pomper *pomper, SoundAnalyzer *analyzer, Leds *leds) {
+    button->isPressed() ? loopProcessor->stepPomperBack() : loopProcessor->processInput();
+}
+
+void setupMain() {
+    Serial.begin(baudRate);
+    button = new Button;
+    pomper = new Pomper;
     analyzer = new SoundAnalyzer();
     leds = new Leds(analyzer);
+    loopProcessor = new LoopProcessor(pomper, analyzer, leds);
+}
+
+void setup() {
+    setupMain();
 }
 
 void loop() {
-    static bool silencePrinted = false;
-    static bool failurePrinted = false;
-    static bool normalPrinted = false;
-    if (isButtonPressed()) {
-        pomperStepBack();
-    } else {
-        Sound sound = analyzer->processInput(analogRead(A0));
-        leds->changeStates();
-        if (analyzer->isSilenceLevelSet() && !silencePrinted){
-            Logger::log("--Silence level:");
-            Logger::log(analyzer->getSilenceLevel());
-            silencePrinted = true;
-        }
-        if (analyzer->isFailureLevelSet() && !failurePrinted){
-            Logger::log("--Failure level:");
-            Logger::log(analyzer->getFailureLevel());
-            failurePrinted = true;
-        }
-        if (analyzer->isNormalLevelSet() && !normalPrinted){
-            Logger::log("--Normal level:");
-            Logger::log(analyzer->getNormalLevel());
-            normalPrinted = true;
-        }
-        if (analyzer->isInitialized())
-            switch (sound) {
-                case Sound::silence:
-                    Logger::log("Silence detected");
-                    break;
-                case Sound::failure:
-                    Logger::log("Failure detected");
-                    break;
-                case Sound::normal:
-                    Logger::log("Normal sound detected");
-                    break;
-                case Sound::unknown:
-                    break;
-            };
+    mainLoop(loopProcessor, button, pomper, analyzer, leds);
 //        Serial.println(analogRead(A0));
-    }
 }

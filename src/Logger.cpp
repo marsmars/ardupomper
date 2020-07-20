@@ -3,49 +3,32 @@
 //
 #ifdef ARDUINO_AVR_UNO
 #include <Arduino.h>
+#define PRINT(value) (Serial.println(value))
 #else
 #include <iostream>
+//#define PRINT(value) (cout << value << "\n")
+#define PRINT(value)
 using std::cout;
 #endif
 
 #include "Logger.h"
 
 void Logger::log(int value) {
-#ifdef ARDUINO_AVR_UNO
-    Serial.println(value);
-#else
-    cout << value << "\n";
-#endif
+    PRINT(value);
 }
 
 void Logger::log(const char *value) {
-#ifdef ARDUINO_AVR_UNO
-    Serial.println(value);
-#else
-    cout << value << "\n";
-#endif
+    PRINT(value);
 }
 
 void Logger::log(long value) {
-#ifdef ARDUINO_AVR_UNO
-    Serial.println(value);
-#else
-    cout << value << "\n";
-#endif
+    PRINT(value);
 }
 
 void Logger::log(unsigned long value) {
-#ifdef ARDUINO_AVR_UNO
-    Serial.println(value);
-#else
-    cout << value << "\n";
-#endif
+    PRINT(value);
 }
 
 void Logger::log(double value) {
-#ifdef ARDUINO_AVR_UNO
-    Serial.println(value);
-#else
-    cout << value << "\n";
-#endif
+    PRINT(value);
 }

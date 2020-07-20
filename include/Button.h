@@ -5,10 +5,13 @@
 #ifndef ARDUPOMPER_BUTTON_H
 #define ARDUPOMPER_BUTTON_H
 
-void buttonSetup();
+class Button {
+public:
+    Button();
 
-int getButtonState();
+    virtual bool isPressed();
 
-bool isButtonPressed();
+    virtual int getState();
+};
 
 #endif //ARDUPOMPER_BUTTON_H

@@ -37,8 +37,6 @@ public:
 
     bool isLevelSet() const;
 
-    bool isSampleAtLevel(SoundSample *sample) const;
-
     void resetSampleIfAlreadyProcessed();
 
     Sound processSampleAtNextLevel(SoundSample *sample);

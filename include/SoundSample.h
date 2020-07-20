@@ -20,10 +20,13 @@ public:
 
     bool isLastInputInSample() const;
 
+    bool isAtLevel(int level) const;
+
     double getAverage(unsigned long sum, int count) const;
 
-    double getLevel();
+    double getLevel() const;
 
+    int setSampleLevel();
 };
 
 #endif //ARDUPOMPER_SOUNDSAMPLE_H

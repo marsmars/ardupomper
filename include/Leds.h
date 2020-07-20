@@ -11,14 +11,15 @@ const int silenceLed = 3;
 const int failureLed = 4;
 const int normalLed = 5;
 
-void ledsSetup();
-
 class Leds {
-    SoundAnalyzer* analyzer;
+protected:
+    SoundAnalyzer *analyzer;
 public:
-    void changeStates();
 
     Leds(SoundAnalyzer *analyzer);
+
+    virtual void changeStates();
+
 };
 
 
