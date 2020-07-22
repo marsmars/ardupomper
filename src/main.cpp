@@ -31,5 +31,5 @@ void setup() {
 
 void loop() {
     mainLoop(loopProcessor, button, pomper, analyzer, leds);
-//        Serial.println(analogRead(A0));
+//    Serial.println(analogRead(A0));
 }

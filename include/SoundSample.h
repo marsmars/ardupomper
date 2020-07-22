@@ -10,23 +10,23 @@ const int notProcessed = -1;
 
 class SoundSample {
     int inputCount = 0;
-    unsigned long inputLevel = 0;
+    double inputLevel = 0;
     double baseLevel = 0.0;
     double sampleLevel = 0.0;
 public:
-    int processInput(int input);
+    double processInput(int input);
 
     bool isComplete();
 
     bool isLastInputInSample() const;
 
-    bool isAtLevel(int level) const;
+    bool isAtLevel(double level) const;
 
     double getAverage(unsigned long sum, int count) const;
 
     double getLevel() const;
 
-    int setSampleLevel();
+    double setSampleLevel();
 };
 
 #endif //ARDUPOMPER_SOUNDSAMPLE_H
