@@ -12,7 +12,6 @@ enum class Sound {
 };
 
 const double levelNotSet = -1;
-const double precisionPercent = 20;
 
 class SoundLevel {
 private:

@@ -11,7 +11,7 @@
 #include "Leds.h"
 #include "LoopProcessor.h"
 
-const int baudRate = 9600;
+const unsigned long serialBaudRate = 230400;
 
 void mainLoop(LoopProcessor *loopProcessor, Button *button, Pomper *pomper, SoundAnalyzer *analyzer, Leds *leds);
 

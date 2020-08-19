@@ -25,36 +25,60 @@ using std::stoi;
 class IntegrationTest : public TestWithParam<tuple<int, bool>> {
 protected:
     ArduinoMock *arduinoMock;
-    string filename = (R"(C:\Users\pgd384\Repo\ardupomper\ardupomper\test\testingFixture.csv)");
-    ifstream data;
+    string basicFixtureFilename = (R"(C:\Users\pgd384\Repo\ardupomper\ardupomper\test\basicFixture.csv)");
+    string silenceFixtureFilename = (R"(C:\Users\pgd384\Repo\ardupomper\ardupomper\test\silenceFixture.csv)");
+    ifstream basicFixture;
+    ifstream silenceFixture;
 
-    int getInput();
-    void reopenData();
+    int getBasicInput();
+    void reopenBasicFixture();
+    int getSilenceInput();
+    void reopenSilenceFixture();
 public:
     IntegrationTest() : arduinoMock{arduinoMockInstance()},
-                        data{ifstream(filename)} {}
+                        basicFixture{ifstream(basicFixtureFilename)},
+                        silenceFixture{ifstream(silenceFixtureFilename)} {}
 
     virtual ~IntegrationTest() { releaseArduinoMock(); }
 };
 
-void IntegrationTest::reopenData() {
-    data.close();
-    data.open(filename);
+void IntegrationTest::reopenBasicFixture() {
+    basicFixture.close();
+    basicFixture.open(basicFixtureFilename);
+}
+
+void IntegrationTest::reopenSilenceFixture() {
+    silenceFixture.close();
+    silenceFixture.open(silenceFixtureFilename);
+}
+
+int IntegrationTest::getBasicInput() {
+    string line;
+    getline(basicFixture, line);
+    return stoi(line);
+}
+
+int IntegrationTest::getSilenceInput() {
+//    static int count = 1;
+    string line;
+    getline(silenceFixture, line);
+//    cout << count++ << ". " << line << endl;
+    return stoi(line);
 }
 
 
-TEST_F(IntegrationTest, loadCSV)
+TEST_F(IntegrationTest, checkBasicFixtureWithAllSounds)
 {
     EXPECT_CALL(*arduinoMock, digitalWrite(_, _)).Times(AnyNumber());
     EXPECT_CALL(*arduinoMock, pinMode(_, _)).Times(AnyNumber());
     SoundAnalyzer analyzer;
-    while(data.good())
-        analyzer.processInput(getInput());
+    while(basicFixture.good())
+        analyzer.processInput(getBasicInput());
     ASSERT_TRUE(analyzer.isInitialized());
-    reopenData();
+    reopenBasicFixture();
     static int count = 0;
-    while(data.good()) {
-        switch (analyzer.processInput(getInput())) {
+    while(basicFixture.good()) {
+        switch (analyzer.processInput(getBasicInput())) {
             case Sound::silence:
             case Sound::failure:
             case Sound::normal:
@@ -64,11 +88,16 @@ TEST_F(IntegrationTest, loadCSV)
                 break;
         }
     }
-    ASSERT_EQ(6, count);
+    ASSERT_EQ(4, count);
 }
 
-int IntegrationTest::getInput() {
-    string line;
-    getline(data, line);
-    return stoi(line);
+TEST_F(IntegrationTest, checkSileceFixtureWithSilenceOnly)
+{
+    EXPECT_CALL(*arduinoMock, digitalWrite(_, _)).Times(AnyNumber());
+    EXPECT_CALL(*arduinoMock, pinMode(_, _)).Times(AnyNumber());
+    SoundAnalyzer analyzer;
+    while(silenceFixture.good())
+        analyzer.processInput(getSilenceInput());
+    ASSERT_FALSE(analyzer.isInitialized());
 }
+

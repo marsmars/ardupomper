@@ -5,8 +5,10 @@
 #ifndef ARDUPOMPER_SOUNDSAMPLE_H
 #define ARDUPOMPER_SOUNDSAMPLE_H
 
-const int sampleSize = 10000;
+const int sampleSize = 20000;
 const int notProcessed = -1;
+const double precisionPercent = 40;
+
 
 class SoundSample {
     int inputCount = 0;

@@ -6,8 +6,8 @@
 #define PRINT(value) (Serial.println(value))
 #else
 #include <iostream>
-//#define PRINT(value) (cout << value << "\n")
-#define PRINT(value)
+#define PRINT(value) (cout << value << "\n")
+//#define PRINT(value)
 using std::cout;
 #endif
 

@@ -5,8 +5,6 @@
 #include <Arduino.h>
 #include <tuple>
 #include <LoopProcessor.h>
-#include "main.h"
-#include "Button.h"
 
 using testing::Test;
 using testing::Return;

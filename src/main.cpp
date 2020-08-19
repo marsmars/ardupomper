@@ -17,7 +17,7 @@ void mainLoop(LoopProcessor *loopProcessor, Button *button, Pomper *pomper, Soun
 }
 
 void setupMain() {
-    Serial.begin(baudRate);
+    Serial.begin(serialBaudRate);
     button = new Button;
     pomper = new Pomper;
     analyzer = new SoundAnalyzer();

@@ -29,6 +29,8 @@ double SoundSample::processInput(int input) {
     else if (inputCount == sampleSize /2){
         inputLevel += input;
         baseLevel = getAverage(inputLevel, inputCount);
+//        Logger::log("Base");
+//        Logger::log(baseLevel);
         inputLevel = 0;
     }
     else
@@ -38,7 +40,9 @@ double SoundSample::processInput(int input) {
 
 double SoundSample::setSampleLevel() {
     if (isLastInputInSample()) {
-        return sampleLevel = getAverage(inputLevel, inputCount / 4);
+//        Logger::log("Level");
+        Logger::log(getAverage(inputLevel, inputCount / 2));
+        return sampleLevel = getAverage(inputLevel, inputCount / 2);
     }
     return notProcessed;
 }
